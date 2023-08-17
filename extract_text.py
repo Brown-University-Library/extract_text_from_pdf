@@ -1,3 +1,6 @@
+# you need to install PyMuPDF via pip
+# pip install PyMuPDF
+
 import fitz  # PyMuPDF
 
 # Open the PDF
