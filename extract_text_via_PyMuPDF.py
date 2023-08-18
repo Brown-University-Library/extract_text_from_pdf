@@ -4,7 +4,7 @@
 import fitz  # PyMuPDF
 
 # Open the PDF
-pdf_document = fitz.open('/path/to/pdf/filename.pdf')
+pdf_document = fitz.open( './testdfg8m6r6.pdf' )
 
 # Loop through pages and extract text
 for page_num in range(pdf_document.page_count):
