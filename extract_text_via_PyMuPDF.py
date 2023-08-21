@@ -42,8 +42,8 @@ for page_num in range(pdf_document.page_count):
     text = page.get_text("dict", flags=fitz.TEXTFLAGS_BLOCKS)
     break
     
-print( 'raw output..........' )
-pprint.pprint(text)
+# print( 'raw output..........' )
+# pprint.pprint(text)
 
 
 ## analyze ----------------
@@ -51,14 +51,36 @@ all_text = ''
 blocks = text['blocks']
 for block in blocks:
     block_text = ''
-    # print( '--- block ---' )
+    print( '--- block ---' )
     for ln in block['lines']:
+        span_text = ''
         for span in ln['spans']:
             # print( '--- span ---' )
-            # print( span['text'] )
-            print( span['text'].strip(), end=' ' )
-        # print('---')
+            span_text += span['text']
+            # print('--- endspan ---')
+        # print( f'span_text: ``{span_text}``' )
+        block_text += ' ' + span_text
+        block_text = block_text.replace( '  ', ' ' )   
+        block_text = block_text.strip() 
+    print( f'block_text: ``{block_text}``' )
+    print( '--- endblock ---' )
     print( ' ' )
+
+
+
+# all_text = ''
+# blocks = text['blocks']
+# for block in blocks:
+#     block_text = ''
+#     print( '--- block ---' )
+#     for ln in block['lines']:
+#         for span in ln['spans']:
+#             # print( '--- span ---' )
+#             # print( span['text'] )
+#             print( span['text'].strip(), end=' ' )
+#             # print('--- endspan ---')
+#     print( '--- endblock ---' )
+#     print( ' ' )
 
 
 
