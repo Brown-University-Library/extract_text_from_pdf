@@ -18,28 +18,69 @@ def process_linebreaks(text):
 
 
 
-# Open the PDF
-pdf_document = fitz.open( './testdfg8m6r6.pdf' )
+## open the PDF -----------------------------------------------------
 
-## Loop through pages and extract text
-# text = ''
-# for page_num in range(pdf_document.page_count):
-#     page = pdf_document.load_page(page_num)
-#     text = page.get_text("text", flags=fitz.TEXTFLAGS_BLOCKS)
-#     break
+# pdf_document = fitz.open( './testdfg8m6r6.pdf' )  # type: ignore
+
+page_dicts = []
+filepath = './testdfg8m6r6.pdf'
+with fitz.open( filepath ) as pdf_document:  # type: ignore
+    assert type( pdf_document ) == fitz.fitz.Document
+    ## loop through pages and extract text-dict data ----------------
+    for page_num in range( pdf_document.page_count ):
+        assert type( page_num ) == int
+        page = pdf_document.load_page( page_num )
+        assert type( page ) == fitz.Page
+        text_dict = page.get_text( 'dict', flags=fitz.TEXTFLAGS_BLOCKS )  # type: ignore
+        page_dicts.append( text_dict )
+
+print( 'page_dicts, ```%s```' % pprint.pformat(page_dicts) )
+
+
+## organize the text ------------------------------------------------
+
+all_text = ''
+for ( i, page_dict ) in enumerate( page_dicts ):
+    all_text += f'---\nExtracted text for page: {i+1} of {len(page_dicts)}.\n---\n\n'
+    blocks = page_dict['blocks']
+    for block in blocks:
+        block_text = ''
+        for ln in block['lines']:
+            span_text = ''
+            for span in ln['spans']:
+                span_text += ' ' + span['text']
+                span_text = span_text.replace( '  ', ' ' )
+                span_text = span_text.strip()
+            block_text += ' ' + span_text
+            block_text = block_text.replace( '  ', ' ' )   
+            block_text = block_text.strip() 
+
+        print( f'block_text: ``{block_text}``' )
+        print( '--- endblock ---' )
+        print( ' ' )
+            
+        all_text += block_text + '\n\n'
     
-# print( 'raw output..........' )
-# print(text)
+    if i > 1:
+        break
+
+print( 'all_text, ```%s```' % all_text )
+1/0
+
+
+
 
 
 ## Loop through pages and extract text
 ## POSSIBLE TODO -- this _does_ keep line-blocks -- we'd have to strip out the newlines within a line.
-text = ''
-for page_num in range(pdf_document.page_count):
-    page = pdf_document.load_page(page_num)
-    # text = page.get_text("xml", flags=fitz.TEXTFLAGS_BLOCKS)
-    # text = page.get_text("blocks")
-    text = page.get_text("dict", flags=fitz.TEXTFLAGS_BLOCKS)
+page_data = []
+for page_num in range( pdf_document.page_count ):
+    assert type( page_num ) == int
+    page = pdf_document.load_page( page_num )
+    assert type( page ) == fitz.Page
+    # foo = page.get_textpage()
+    text_dict = page.get_text( 'dict', flags=fitz.TEXTFLAGS_BLOCKS, encoding='utf8' )  # type: ignore
+    assert type( text_dict ) == dict, type( text_dict )
     break
     
 # print( 'raw output..........' )
@@ -56,7 +97,9 @@ for block in blocks:
         span_text = ''
         for span in ln['spans']:
             # print( '--- span ---' )
-            span_text += span['text']
+            span_text += ' ' + span['text']
+            span_text = span_text.replace( '  ', ' ' )
+            span_text = span_text.strip()
             # print('--- endspan ---')
         # print( f'span_text: ``{span_text}``' )
         block_text += ' ' + span_text
