@@ -27,6 +27,11 @@ with fitz.open( FILEPATH ) as pdf_document:  # type: ignore
         text_dict = page.get_text( 'dict', flags=fitz.TEXTFLAGS_BLOCKS )  # type: ignore
         page_dicts.append( text_dict )
 
+import json
+jsn = json.dumps( page_dicts, sort_keys=True, indent=2 )
+with open( './page_dicts.json', 'w' ) as f:
+    f.write( jsn )
+
 # print( 'page_dicts, ```%s```' % pprint.pformat(page_dicts) )
 
 
