@@ -27,12 +27,30 @@ with fitz.open( FILEPATH ) as pdf_document:  # type: ignore
         text_dict = page.get_text( 'dict', flags=fitz.TEXTFLAGS_BLOCKS )  # type: ignore
         page_dicts.append( text_dict )
 
-import json
-jsn = json.dumps( page_dicts, sort_keys=True, indent=2 )
-with open( './page_dicts.json', 'w' ) as f:
-    f.write( jsn )
+# import json
+# jsn = json.dumps( page_dicts, sort_keys=True, indent=2 )
+# with open( './page_dicts.json', 'w' ) as f:
+#     f.write( jsn )
 
 # print( 'page_dicts, ```%s```' % pprint.pformat(page_dicts) )
+
+
+
+
+
+dct = page_dicts[0]
+for (i, block) in enumerate(dct['blocks']):
+     if i > 15:
+         break
+     print( f'lines in block, ``{len(block["lines"])}``' )
+     if i < 20:
+         for line in block['lines']:
+             print( 'starting new line' )
+             for spn in line['spans']:
+                 print( f'spn, ``{spn["text"]}``' )
+
+
+print( '\n\n----------\n\n' )
 
 
 ## organize the text ------------------------------------------------
